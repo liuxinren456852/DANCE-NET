@@ -25,8 +25,8 @@ import random
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=4, help='GPU to use [default: GPU 0]')
 parser.add_argument('--exp_no', type=str, default='1', help='ExperimentNumber')
-parser.add_argument('--model', default='pointconv_context', help='Model name [default: model]')
-parser.add_argument('--log_dir', default='log_pointconv_ctx', help='Log dir [default: log]')
+parser.add_argument('--model', default='dancenet', help='Model name [default: model]')
+parser.add_argument('--log_dir', default='log_dancenet_v1', help='Log dir [default: log]')
 parser.add_argument('--num_point', type=int, default=8192, help='Point Number [default: 8192]')
 parser.add_argument('--max_epoch', type=int, default=2000, help='Epoch to run [default: 201]')
 parser.add_argument('--batch_size', type=int, default=6, help='Batch Size during training [default: 32]')
@@ -89,7 +89,7 @@ BANDWIDTH = FLAGS.sigma
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
     LOG_FOUT.flush()
-#     print(out_str)
+    print(out_str)
 
 def get_learning_rate(batch):
     learning_rate = tf.train.exponential_decay(
@@ -341,11 +341,11 @@ import cPickle as pickle
 import numpy as np
 
 train_f = open('./data/train_merge_min_norm_fea.pickle', 'rb')
-train_xyz, train_label, train_feats = pickle.load(train_f)
+train_xyz, train_label, train_feats = pickle.load(train_f, encoding='bytes')
 train_f.close()
 
 test_f = open('./data/test_merge_min_norm_fea_paper_height.pickle', 'r')
-test_xyz, test_label, test_feats = pickle.load(test_f)
+test_xyz, test_label, test_feats = pickle.load(test_f, encoding='bytes')
 test_f.close()
 
 NUM_CLASSES = 9
@@ -496,7 +496,7 @@ def eval_one_epoch_whole_scene(sess, ops, test_writer):
 pointclouds_pl, labels_pl, smpws_pl = placeholder_inputs(None, None)
 feature_pl = tf.placeholder(tf.float32, shape=(None, None, 2))
 is_training_pl = tf.placeholder(tf.bool, shape=())
-ctx_pl = tf.placeholder(tf.int32, shape=(None, NUM_CLASSES))
+ctx_pl = tf.placeholder(tf.float32, shape=(None, NUM_CLASSES))
 
 # Note the global_step=batch parameter to minimize. 
 # That tells the optimizer to helpfully increment the 'batch' parameter for you every time it trains.

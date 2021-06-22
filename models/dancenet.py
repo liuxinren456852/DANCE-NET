@@ -7,7 +7,7 @@ sys.path.append(os.path.join(BASE_DIR, '../utils'))
 import tensorflow as tf
 import numpy as np
 import tf_util
-from PointConv import feature_encoding_layer, feature_decoding_layer
+from DensityConv import feature_encoding_layer, feature_decoding_layer
 
 def placeholder_inputs(batch_size, num_point):
     pointclouds_pl = tf.placeholder(tf.float32, shape=(batch_size, num_point, 3))
@@ -63,15 +63,15 @@ def get_loss(pred, label, smpw, se_pred=None, ctx=None):
     """ pred: BxNxC,
         label: BxN,
         smpw: BxN """
-    #######ignore label 0
-    NUM_CLASSES = pred.shape[-1]
-    pred=tf.reshape(pred,[-1,NUM_CLASSES])
-    label=tf.reshape(label,[-1])
-    smpw = tf.reshape(smpw,[-1])
-    indices=tf.squeeze(tf.where(tf.not_equal(label,0)),1)
-    label=tf.cast(tf.gather(label,indices),tf.int32)
-    pred=tf.gather(pred,indices)
-    smpw=tf.gather(smpw,indices)
+#     #######ignore label 0
+#     NUM_CLASSES = pred.shape[-1]
+#     pred=tf.reshape(pred,[-1,NUM_CLASSES])
+#     label=tf.reshape(label,[-1])
+#     smpw = tf.reshape(smpw,[-1])
+#     indices=tf.squeeze(tf.where(tf.not_equal(label,0)),1)
+#     label=tf.cast(tf.gather(label,indices),tf.int32)
+#     pred=tf.gather(pred,indices)
+#     smpw=tf.gather(smpw,indices)
 
     classify_loss = tf.losses.sparse_softmax_cross_entropy(labels=label, logits=pred, weights=smpw)
     weight_reg = tf.add_n(tf.get_collection('losses')) #please check the collection name in tf_util.py

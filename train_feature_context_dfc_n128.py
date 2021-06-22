@@ -29,8 +29,8 @@ import random
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=4, help='GPU to use [default: GPU 0]')
 parser.add_argument('--exp_no', type=str, default='13', help='ExperimentNumber')
-parser.add_argument('--model', default='pointconv_context', help='Model name [default: model]')
-parser.add_argument('--log_dir', default='log_pointconv_ctx_dfc_n128_new', help='Log dir [default: log]')
+parser.add_argument('--model', default='dancenet', help='Model name [default: model]')
+parser.add_argument('--log_dir', default='log_dancenet_dfc_n128_new', help='Log dir [default: log]')
 parser.add_argument('--num_point', type=int, default=14000, help='Point Number [default: 8192]')
 parser.add_argument('--max_epoch', type=int, default=2000, help='Epoch to run [default: 201]')
 parser.add_argument('--batch_size', type=int, default=6, help='Batch Size during training [default: 32]')
@@ -529,7 +529,7 @@ def eval_one_epoch_whole_scene(sess, ops, test_writer):
 pointclouds_pl, labels_pl, smpws_pl = placeholder_inputs(None, None)
 feature_pl = tf.placeholder(tf.float32, shape=(None, None, 1))
 is_training_pl = tf.placeholder(tf.bool, shape=())
-ctx_pl = tf.placeholder(tf.int32, shape=(None, NUM_CLASSES))
+ctx_pl = tf.placeholder(tf.float32, shape=(None, NUM_CLASSES))
 
 # Note the global_step=batch parameter to minimize. 
 # That tells the optimizer to helpfully increment the 'batch' parameter for you every time it trains.
